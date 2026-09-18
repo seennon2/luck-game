@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>لعبة الحظ والمخاطرة 🎲</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #101010;
+    color: white;
+    min-height: 100vh;
+    padding: 25px 0;
+}
+
+.container {
+    width: 92%;
+    max-width: 750px;
+    margin: auto;
+    background: #1c1c1c;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 0 35px #000;
+}
+
+h1 {
+    text-align: center;
+    color: #ffd54f;
+    font-size: 32px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aaa;
+    line-height: 1.7;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #303030;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 12px;
+    background: #fbc02d;
+    color: #111;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ffe082;
+}
+
+.hidden {
+    display: none;
+}
+
+.players {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.player {
+    background: #292929;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+}
+
+.player.active {
+    border: 2px solid #ffd54f;
+    box-shadow: 0 0 12px #ffd54f;
+}
+
+.player-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.points {
+    color: #ffd54f;
+    margin-top: 7px;
+}
+
+.round {
+    text-align: center;
+    color: #aaa;
+    margin: 20px 0;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.card {
+    min-height: 90px;
+    background: #303030;
+    border: 2px solid #555;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.04);
+    border-color: #ffd54f;
+}
+
+.card.used {
+    cursor: default;
+    opacity: 0.65;
+    transform: none;
+}
+
+.result {
+    text-align: center;
+    font-size: 22px;
+    line-height: 1.7;
+    margin: 20px 0;
+    min-height: 50px;
+}
+
+.choice {
+    background: #292929;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 12px;
+}
+
+.choice button {
+    background: #444;
+    color: white;
+}
+
+.choice button:hover {
+    background: #555;
+}
+
+.winner {
+    text-align: center;
+    background: #292929;
+    padding: 25px;
+    border-radius: 18px;
+}
+
+.winner h2 {
+    color: #ffd54f;
+}
+
+.trophy {
+    font-size: 55px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- البداية -->
+
+<div id="startScreen">
+
+    <h1>🎲 لعبة الحظ والمخاطرة</h1>
+
+    <p class="subtitle">
+        لعبة لأربع لاعبات 👭🏻<br>
+        كل لاعبة تبدأ بـ 100 نقطة!
+    </p>
+
+    <input id="name1" placeholder="اسم اللاعبة الأولى">
+
+    <input id="name2" placeholder="اسم اللاعبة الثانية">
+
+    <input id="name3" placeholder="اسم اللاعبة الثالثة">
+
+    <input id="name4" placeholder="اسم اللاعبة الرابعة">
+
+    <button onclick="startGame()">
+        🎮 ابدأ اللعبة
+    </button>
+
+</div>
+
+
+<!-- اللعبة -->
+
+<div id="gameScreen" class="hidden">
+
+    <h1>🎲 الحظ والمخاطرة</h1>
+
+    <div id="players" class="players"></div>
+
+    <div id="roundText" class="round"></div>
+
+    <div id="result" class="result">
+        اختاري بطاقة! 👀
+    </div>
+
+    <div id="cards" class="cards"></div>
+
+</div>
+
+
+<!-- اختيار لاعبة للسرقة -->
+
+<div id="targetScreen" class="hidden">
+
+    <h1>😈 اختاري لاعبة</h1>
+
+    <p class="subtitle">
+        اختاري من ستخسر 30 نقطة!
+    </p>
+
+    <div id="targets"></div>
+
+</div>
+
+
+<!-- النهاية -->
+
+<div id="endScreen" class="hidden">
+
+    <div class="winner">
+
+        <div class="trophy">🏆</div>
+
+        <h2>انتهت اللعبة!</h2>
+
+        <div id="finalResults"></div>
+
+        <button onclick="location.reload()">
+            🔄 لعبة جديدة
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let players = [];
+
+let currentPlayer = 0;
+
+let round = 1;
+
+const totalRounds = 10;
+
+let usedCards = 0;
+
+let stealMode = false;
+
+
+/* الجوائز والمفاجآت */
+
+const rewards = [
+
+    { text: "💰 +20 نقطة", type: "add", value: 20 },
+
+    { text: "💰 +50 نقطة", type: "add", value: 50 },
+
+    { text: "💎 +100 نقطة", type: "add", value: 100 },
+
+    { text: "🪙 +30 نقطة", type: "add", value: 30 },
+
+    { text: "🎁 +75 نقطة", type: "add", value: 75 },
+
+    { text: "💣 -20 نقطة", type: "remove", value: 20 },
+
+    { text: "💣 -50 نقطة", type: "remove", value: 50 },
+
+    { text: "😈 سرقة 30 نقطة", type: "steal", value: 30 },
+
+    { text: "🛡️ حماية!", type: "shield", value: 0 },
+
+    { text: "❓ لا شيء!", type: "nothing", value: 0 },
+
+    { text: "🍀 +40 نقطة", type: "add", value: 40 },
+
+    { text: "💥 -30 نقطة", type: "remove", value: 30 }
+
+];
+
+
+function startGame() {
+
+    const names = [
+
+        document.getElementById("name1").value.trim(),
+
+        document.getElementById("name2").value.trim(),
+
+        document.getElementById("name3").value.trim(),
+
+        document.getElementById("name4").value.trim()
+
+    ];
+
+    for (let i = 0; i < names.length; i++) {
+
+        if (!names[i]) {
+
+            alert("اكتبي أسماء اللاعبات الأربعة أولاً 😭");
+
+            return;
+
+        }
+
+    }
+
+
+    players = names.map(name => ({
+
+        name: name,
+
+        points: 100,
+
+        shield: false
+
+    }));
+
+
+    document.getElementById("startScreen").classList.add("hidden");
+
+    document.getElementById("gameScreen").classList.remove("hidden");
+
+    createRound();
+
+}
+
+
+function updatePlayers() {
+
+    let html = "";
+
+    players.forEach((player, index) => {
+
+        html += `
+
+            <div class="player ${index === currentPlayer ? "active" : ""}">
+
+                <div class="player-name">
+
+                    ${index === currentPlayer ? "🎯 " : ""}
+
+                    ${player.name}
+
+                </div>
+
+                <div class="points">
+
+                    ${player.points} نقطة
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+    document.getElementById("players").innerHTML = html;
+
+}
+
+
+function createRound() {
+
+    usedCards = 0;
+
+    stealMode = false;
+
+    updatePlayers();
+
+    document.getElementById("roundText").innerHTML =
+
+        `الجولة ${round} من ${totalRounds}<br>
+
+         🎯 الدور على: <b>${players[currentPlayer].name}</b>`;
+
+
+    document.getElementById("result").innerHTML =
+
+        "اختاري بطاقة من البطاقات 👀";
+
+
+    const cards = document.getElementById("cards");
+
+    cards.innerHTML = "";
+
+
+    for (let i = 0; i < 12; i++) {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+        card.innerHTML = "❓";
+
+        card.onclick = () => chooseCard(card);
+
+        cards.appendChild(card);
+
+    }
+
+}
+
+
+function chooseCard(card) {
+
+    if (card.classList.contains("used")) return;
+
+    if (stealMode) return;
+
+    card.classList.add("used");
+
+    card.innerHTML = "🎲";
+
+    usedCards++;
+
+    const reward = rewards[Math.floor(Math.random() * rewards.length)];
+
+    applyReward(reward);
+
+}
+
+
+function applyReward(reward) {
+
+    const player = players[currentPlayer];
+
+    if (reward.type === "add") {
+
+        player.points += reward.value;
+
+        document.getElementById("result").innerHTML =
+
+            `🎉 ${reward.text}`;
+
+        finishTurn();
+
+    }
+
+
+    else if (reward.type === "remove") {
+
+        if (player.shield) {
+
+            player.shield = false;
+
+            document.getElementById("result").innerHTML =
+
+                `🛡️ عندج حماية! ما خسرِتي النقاط.`;
+
+        } else {
+
+            player.points -= reward.value;
+
+            if (player.points < 0) player.points = 0;
+
+            document.getElementById("result").innerHTML =
+
+                `💥 ${reward.text}`;
+
+        }
+
+        finishTurn();
+
+    }
+
+
+    else if (reward.type === "shield") {
+
+        player.shield = true;
+
+        document.getElementById("result").innerHTML =
+
+            `🛡️ حصلتي على حماية! أول عقوبة ما تأثر عليج.`;
+
+        finishTurn();
+
+    }
+
+
+    else if (reward.type === "nothing") {
+
+        document.getElementById("result").innerHTML =
+
+            `😂 لا حظ ولا خسارة! البطاقة فارغة.`;
+
+        finishTurn();
+
+    }
+
+
+    else if (reward.type === "steal") {
+
+        stealMode = true;
+
+        document.getElementById("result").innerHTML =
+
+            `😈 اختاري لاعبة حتى تسرقين منها 30 نقطة!`;
+
+        showTargets();
+
+    }
+
+}
+
+
+function showTargets() {
+
+    document.getElementById("gameScreen").classList.add("hidden");
+
+    document.getElementById("targetScreen").classList.remove("hidden");
+
+    let html = "";
+
+    players.forEach((player, index) => {
+
+        if (index === currentPlayer) return;
+
+        html += `
+
+            <div class="choice">
+
+                <b>${player.name}</b>
+
+                <button onclick="stealFrom(${index})">
+
+                    😈 سرقة 30 نقطة
+
+                </button>
+
+            </div>
+
+        `;
+
+    });
+
+    document.getElementById("targets").innerHTML = html;
+
+}
+
+
+function stealFrom(index) {
+
+    players[index].points -= 30;
+
+    if (players[index].points < 0)
+
+        players[index].points = 0;
+
+
+    players[currentPlayer].points += 30;
+
+    stealMode = false;
+
+    document.getElementById("targetScreen").classList.add("hidden");
+
+    document.getElementById("gameScreen").classList.remove("hidden");
+
+    document.getElementById("result").innerHTML =
+
+        `😈 سرقتِ 30 نقطة من ${players[index].name}!`;
+
+    updatePlayers();
+
+    finishTurn();
+
+}
+
+
+function finishTurn() {
+
+    updatePlayers();
+
+    setTimeout(() => {
+
+        nextTurn();
+
+    }, 1200);
+
+}
+
+
+function nextTurn() {
+
+    currentPlayer++;
+
+
+    if (currentPlayer >= players.length) {
+
+        currentPlayer = 0;
+
+        round++;
+
+    }
+
+
+    if (round > totalRounds) {
+
+        endGame();
+
+        return;
+
+    }
+
+
+    createRound();
+
+}
+
+
+function endGame() {
+
+    document.getElementById("gameScreen").classList.add("hidden");
+
+    document.getElementById("endScreen").classList.remove("hidden");
+
+
+    const sorted = [...players].sort(
+
+        (a, b) => b.points - a.points
+
+    );
+
+
+    let html = "";
+
+    sorted.forEach((player, index) => {
+
+        let medal = "";
+
+        if (index === 0) medal = "🥇";
+
+        else if (index === 1) medal = "🥈";
+
+        else if (index === 2) medal = "🥉";
+
+        else medal = "🏅";
+
+
+        html += `
+
+            <div class="choice">
+
+                ${medal}
+
+                <b>${index + 1}. ${player.name}</b>
+
+                — ${player.points} نقطة
+
+            </div>
+
+        `;
+
+    });
+
+
+    document.getElementById("finalResults").innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
