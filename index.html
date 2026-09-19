@@ -17,14 +17,17 @@
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
     // 🔥 الصقي firebaseConfig مالج هنا
-    const firebaseConfig = { apiKey: "AIzaSyDDbWNnYVW2TDMK1Wsp78qkwmmlt-ef8_E",
+    const firebaseConfig = {
+  apiKey: "AIzaSy...",
   authDomain: "luck-game-3285f.firebaseapp.com",
-  projectId: databaseURL: "https://luck-game-3285f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "luck-game-3285f",
+  databaseURL: "https://luck-game-3285f-default-rtdb.europe-west1.firebasedatabase.app",
   storageBucket: "luck-game-3285f.firebasestorage.app",
   messagingSenderId: "412953420597",
   appId: "1:412953420597:web:7ef2dfd8c94a4e3a95a27c"
+};
       // ضعي إعدادات Firebase هنا
-    };
+   
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
