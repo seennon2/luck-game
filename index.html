@@ -3,44 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لعبة الحظ والمخاطرة 🎲</title>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import {
-      getDatabase,
-      ref,
-      set,
-      get,
-      update,
-      onValue
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-
-    // 🔥 الصقي firebaseConfig مالج هنا
-    const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "luck-game-3285f.firebaseapp.com",
-  projectId: "luck-game-3285f",
-  databaseURL: "https://luck-game-3285f-default-rtdb.europe-west1.firebasedatabase.app",
-  storageBucket: "luck-game-3285f.firebasestorage.app",
-  messagingSenderId: "412953420597",
-  appId: "1:412953420597:web:7ef2dfd8c94a4e3a95a27c"
-};
-      // ضعي إعدادات Firebase هنا
-   
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.firebaseDB = db;
-    window.firebaseRef = ref;
-    window.firebaseSet = set;
-    window.firebaseGet = get;
-    window.firebaseUpdate = update;
-    window.firebaseOnValue = onValue;
-
-    document.dispatchEvent(new Event("firebase-ready"));
-  </script>
+  <title>لعبة الأسئلة السريعة 🧠⚡</title>
 
   <style>
     * {
@@ -49,821 +12,1473 @@
 
     body {
       margin: 0;
+      min-height: 100vh;
+      padding: 25px 15px;
       font-family: Arial, sans-serif;
-      background: #111;
+      background: #111827;
       color: white;
-      text-align: center;
     }
 
-    .screen {
-      min-height: 100vh;
-      padding: 30px 15px;
+    .container {
+      max-width: 520px;
+      margin: auto;
     }
 
     .box {
-      max-width: 600px;
-      margin: auto;
-      background: #1d1d1d;
+      background: #1f2937;
       padding: 25px;
-      border-radius: 20px;
+      border-radius: 22px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
 
     h1 {
-      color: #ff4d4d;
+      color: #f87171;
+      margin-top: 0;
+      font-size: 30px;
     }
 
     h2 {
-      color: #ff7777;
+      margin-top: 5px;
+    }
+
+    p {
+      color: #d1d5db;
+      font-size: 17px;
     }
 
     input {
       width: 100%;
       padding: 14px;
       margin: 8px 0;
-      border-radius: 10px;
-      border: 1px solid #555;
-      background: #292929;
-      color: white;
+      border: none;
+      border-radius: 12px;
       font-size: 16px;
+      text-align: center;
+      outline: none;
     }
 
     button {
-      padding: 13px 20px;
-      margin: 8px;
+      width: 100%;
       border: none;
-      border-radius: 10px;
-      background: #d62828;
-      color: white;
-      font-size: 16px;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 17px;
+      font-weight: bold;
       cursor: pointer;
+      background: #ef4444;
+      color: white;
     }
 
     button:hover {
-      background: #ff4444;
+      background: #dc2626;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: #374151;
+    }
+
+    .secondary:hover {
+      background: #4b5563;
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
     .room-code {
-      font-size: 28px;
-      color: #ffd166;
+      font-size: 36px;
       font-weight: bold;
-      letter-spacing: 4px;
-      margin: 15px;
-    }
-
-    .players {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 20px;
+      color: #fca5a5;
+      letter-spacing: 6px;
+      margin: 15px 0;
     }
 
     .player {
-      background: #292929;
-      padding: 15px;
-      border-radius: 12px;
+      background: #374151;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 7px 0;
     }
 
-    .points {
-      color: #ffd166;
-      font-size: 24px;
-      font-weight: bold;
+    .host {
+      color: #fbbf24;
     }
 
     .status {
-      margin: 15px 0;
-      color: #bbb;
+      margin-top: 15px;
+      color: #fbbf24;
+      font-weight: bold;
+    }
+
+    .timer {
+      font-size: 42px;
+      color: #f87171;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .question {
+      font-size: 23px;
+      font-weight: bold;
+      line-height: 1.5;
+      margin: 25px 0;
+    }
+
+    .answer {
+      background: #374151;
+      margin-top: 10px;
+    }
+
+    .answer:hover {
+      background: #4b5563;
+    }
+
+    .answer.correct {
+      background: #16a34a;
+    }
+
+    .answer.wrong {
+      background: #991b1b;
+    }
+
+    .answered {
+      background: #6b7280 !important;
+    }
+
+    .score {
+      background: #111827;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 8px 0;
+      font-size: 18px;
+    }
+
+    .my-score {
+      border: 2px solid #f87171;
+    }
+
+    .waiting {
+      color: #fbbf24;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    .small {
+      font-size: 14px;
+      color: #9ca3af;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- الصفحة الرئيسية -->
-  <section id="home" class="screen">
-    <div class="box">
-      <h1>🎲 لعبة الحظ والمخاطرة</h1>
+<div class="container">
 
-      <h2>إنشاء غرفة</h2>
+  <!-- HOME -->
+  <div class="box" id="home">
+    <h1>🧠 لعبة الأسئلة السريعة ⚡</h1>
 
-      <input id="createName" placeholder="اسمك">
+    <p>
+      تنافسوا بالأسئلة وشوفوا منو يجمع نقاط أكثر 😈
+    </p>
 
-      <button onclick="createRoom()">
-        إنشاء غرفة 🎮
-      </button>
+    <p>👥 من 3 إلى 4 لاعبين</p>
 
-      <hr>
+    <input id="playerName" placeholder="اكتب اسمك">
 
-      <h2>دخول غرفة</h2>
+    <button id="createBtn">
+      🎮 إنشاء غرفة
+    </button>
 
-      <input id="roomCode" placeholder="رمز الغرفة">
+    <button class="secondary" id="showJoinBtn">
+      🚪 دخول غرفة
+    </button>
+  </div>
 
-      <input id="joinName" placeholder="اسمك">
 
-      <button onclick="joinRoom()">
-        دخول 🚪
-      </button>
+  <!-- JOIN -->
+  <div class="box hidden" id="joinBox">
 
-      <p id="message"></p>
+    <h2>🚪 دخول غرفة</h2>
+
+    <input id="joinName" placeholder="اكتب اسمك">
+
+    <input id="roomInput" placeholder="كود الغرفة">
+
+    <button id="joinBtn">
+      دخول 🎮
+    </button>
+
+    <button class="secondary" id="backHomeBtn">
+      رجوع
+    </button>
+
+  </div>
+
+
+  <!-- ROOM -->
+  <div class="box hidden" id="roomBox">
+
+    <h2>🎮 غرفة اللعب</h2>
+
+    <p>كود الغرفة:</p>
+
+    <div class="room-code" id="roomCode">
+      ----
     </div>
-  </section>
 
+    <p>اللاعبون:</p>
 
-  <!-- غرفة الانتظار -->
-  <section id="lobby" class="screen hidden">
-    <div class="box">
+    <div id="playersList"></div>
 
-      <h1>🎲 غرفة اللعبة</h1>
-
-      <p>رمز الغرفة:</p>
-
-      <div id="showRoomCode" class="room-code"></div>
-
-      <p class="status">
-        أرسل هذا الرمز إلى أصدقائك حتى يدخلوا للغرفة.
-      </p>
-
-      <h2>اللاعبون</h2>
-
-      <div id="lobbyPlayers" class="players"></div>
-
-      <p id="lobbyStatus" class="status"></p>
-
-      <button id="startButton" class="hidden" onclick="startGame()">
-        ابدأ اللعبة 🚀
-      </button>
-
+    <div class="status" id="roomStatus">
+      نحتاج 3 لاعبين حتى تبدأ اللعبة 👥
     </div>
-  </section>
+
+    <button class="hidden" id="startButton">
+      🚀 ابدأ اللعبة
+    </button>
+
+    <p class="small">
+      شاركوا كود الغرفة ويا اللاعبين 📱
+    </p>
+
+  </div>
 
 
-  <!-- اللعبة -->
-  <section id="game" class="screen hidden">
-    <div class="box">
+  <!-- GAME -->
+  <div class="box hidden" id="gameBox">
 
-      <h1>🎲 الحظ والمخاطرة</h1>
-
-      <h2 id="roundText">الجولة 1</h2>
-
-      <p id="turnText"></p>
-
-      <div id="gamePlayers" class="players"></div>
-
-      <div id="gameActions"></div>
-
+    <div class="timer" id="timer">
+      10
     </div>
-  </section>
+
+    <p id="questionNumber">
+      السؤال 1 من 10
+    </p>
+
+    <div class="question" id="questionText">
+      السؤال يظهر هنا
+    </div>
+
+    <div id="answers"></div>
+
+    <div class="waiting hidden" id="waitingMessage">
+      ⏳ تم تسجيل إجابتك، ننتظر باقي اللاعبين...
+    </div>
+
+  </div>
 
 
-<script>
+  <!-- RESULTS -->
+  <div class="box hidden" id="resultBox">
 
-let roomId = null;
-let myPlayerId = null;
-let gameData = null;
+    <h1>🏆 النتائج</h1>
 
-const TOTAL_ROUNDS = 10;
+    <div id="results"></div>
 
+    <button id="newGameButton">
+      🔄 مباراة جديدة
+    </button>
 
-/* إنشاء رمز غرفة */
+  </div>
 
-function generateRoomCode() {
-
-  return Math.random()
-    .toString(36)
-    .substring(2, 8)
-    .toUpperCase();
-
-}
+</div>
 
 
-/* إنشاء معرف لاعب */
+<script type="module">
 
-function generatePlayerId() {
+  /* =========================
+     FIREBASE CONFIG
+  ========================= */
 
-  return "p_" +
-    Math.random()
-      .toString(36)
-      .substring(2, 10);
-
-}
-
-
-/* انتظار Firebase */
-
-document.addEventListener("firebase-ready", () => {
-
-  console.log("Firebase جاهز ✅");
-
-});
-
-
-/* إنشاء غرفة */
-
-async function createRoom() {
-
-  const name =
-    document.getElementById("createName").value.trim();
-
-  if (!name) {
-
-    showMessage("اكتبي اسمج أولاً ❤️");
-    return;
-
-  }
-
-  roomId = generateRoomCode();
-
-  myPlayerId = generatePlayerId();
-
-  const player = {
-
-    id: myPlayerId,
-    name: name,
-    points: 100
-
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDbWNnYVW2TDMK1Wsp78qkwmmlt-ef8_E",
+    authDomain: "luck-game-3285.firebaseapp.com",
+    projectId: "luck-game-3285",
+    databaseURL: "https://luck-game-3285-default-rtdb.europe-west1.firebasedatabase.app",
+    storageBucket: "luck-game-3285.firebasestorage.app",
+    messagingSenderId: "412953420597",
+    appId: "1:412953420597:web:7ef2dfd8c94a4e3a95a27c"
   };
 
-  const room = {
 
-    status: "waiting",
+  /* =========================
+     FIREBASE IMPORT
+  ========================= */
 
-    round: 0,
-
-    currentPlayer: 0,
-
-    players: {
-
-      [myPlayerId]: player
-
-    }
-
-  };
-
-  try {
-
-    await firebaseSet(
-      firebaseRef(firebaseDB, "rooms/" + roomId),
-      room
+  const { initializeApp } =
+    await import(
+      "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js"
     );
 
-    openLobby();
+  const {
+    getDatabase,
+    ref,
+    set,
+    get,
+    update,
+    onValue
+  } =
+    await import(
+      "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js"
+    );
 
-    listenToRoom();
 
-  } catch (error) {
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-    console.error(error);
 
-    showMessage(
-      "صار خطأ بالاتصال بـ Firebase 😢"
+  /* =========================
+     GAME DATA
+  ========================= */
+
+  const questions = [
+
+    {
+      q: "أي دولة تُعرف باسم بلاد الرافدين؟",
+      a: ["العراق", "مصر", "سوريا", "الأردن"],
+      correct: 0
+    },
+
+    {
+      q: "ما هو أكبر محيط في العالم؟",
+      a: ["الأطلسي", "الهندي", "الهادئ", "المتجمد"],
+      correct: 2
+    },
+
+    {
+      q: "إذا كان لديك 5 تفاحات وأخذت 2، كم بقي؟",
+      a: ["2", "3", "4", "5"],
+      correct: 1
+    },
+
+    {
+      q: "أي عضو في جسم الإنسان مسؤول بشكل أساسي عن ضخ الدم؟",
+      a: ["الرئة", "الكبد", "القلب", "المعدة"],
+      correct: 2
+    },
+
+    {
+      q: "ما الكوكب الأقرب إلى الشمس؟",
+      a: ["الأرض", "عطارد", "المريخ", "الزهرة"],
+      correct: 1
+    },
+
+    {
+      q: "أي رياضة تستخدم كرة وشبكة ويُسمح فيها بلمس الكرة ثلاث مرات للفريق؟",
+      a: ["كرة القدم", "كرة السلة", "الكرة الطائرة", "التنس"],
+      correct: 2
+    },
+
+    {
+      q: "كم عدد ألوان قوس قزح المعروفة تقليديًا؟",
+      a: ["5", "6", "7", "8"],
+      correct: 2
+    },
+
+    {
+      q: "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
+      a: ["الأكسجين", "الهيدروجين", "ثاني أكسيد الكربون", "النيتروجين"],
+      correct: 0
+    },
+
+    {
+      q: "ما عاصمة اليابان؟",
+      a: ["سيول", "بكين", "طوكيو", "بانكوك"],
+      correct: 2
+    },
+
+    {
+      q: "لغز: شيء كلما أخذت منه كبر، ما هو؟",
+      a: ["الحفرة", "الكتاب", "الماء", "الطريق"],
+      correct: 0
+    }
+
+  ];
+
+
+  /* =========================
+     VARIABLES
+  ========================= */
+
+  let currentRoom = "";
+  let currentPlayerId = "";
+  let currentPlayerName = "";
+  let isHost = false;
+
+  let roomListener = null;
+  let timerInterval = null;
+
+  let localQuestion = -1;
+  let localAnswered = false;
+
+
+  /* =========================
+     HELPERS
+  ========================= */
+
+  function makeId() {
+
+    return (
+      Date.now().toString(36) +
+      Math.random().toString(36).substring(2, 8)
     );
 
   }
 
-}
 
+  function makeRoomCode() {
 
-/* دخول غرفة */
-
-async function joinRoom() {
-
-  const code =
-    document.getElementById("roomCode")
-      .value
-      .trim()
-      .toUpperCase();
-
-  const name =
-    document.getElementById("joinName")
-      .value
-      .trim();
-
-  if (!code || !name) {
-
-    showMessage(
-      "اكتبي رمز الغرفة واسمج ❤️"
-    );
-
-    return;
+    return Math.floor(
+      1000 + Math.random() * 9000
+    ).toString();
 
   }
 
-  try {
 
-    const roomRef =
-      firebaseRef(
-        firebaseDB,
-        "rooms/" + code
-      );
+  function showOnly(id) {
 
-    const snapshot =
-      await firebaseGet(roomRef);
+    document
+      .querySelectorAll(".box")
+      .forEach(box => box.classList.add("hidden"));
 
-    if (!snapshot.exists()) {
+    document
+      .getElementById(id)
+      .classList.remove("hidden");
 
-      showMessage(
-        "ماكو غرفة بهذا الرمز ❌"
-      );
+  }
 
-      return;
 
-    }
+  function roomRef() {
 
-    const room =
-      snapshot.val();
+    return ref(
+      db,
+      "quickQuiz/" + currentRoom
+    );
 
-    const playerCount =
+  }
+
+
+  /* =========================
+     HOME BUTTONS
+  ========================= */
+
+  document
+    .getElementById("showJoinBtn")
+    .onclick = () => {
+
+      showOnly("joinBox");
+
+    };
+
+
+  document
+    .getElementById("backHomeBtn")
+    .onclick = () => {
+
+      showOnly("home");
+
+    };
+
+
+  document
+    .getElementById("newGameButton")
+    .onclick = () => {
+
+      location.reload();
+
+    };
+
+
+  /* =========================
+     CREATE ROOM
+  ========================= */
+
+  document
+    .getElementById("createBtn")
+    .onclick = async () => {
+
+      const name =
+        document
+          .getElementById("playerName")
+          .value
+          .trim();
+
+      if (!name) {
+
+        alert("اكتب اسمك أولاً 😭");
+        return;
+
+      }
+
+
+      currentPlayerId = makeId();
+      currentPlayerName = name;
+
+      let code = makeRoomCode();
+
+      /*
+        نتأكد أن الكود غير مستخدم.
+      */
+
+      let existing =
+        await get(
+          ref(db, "quickQuiz/" + code)
+        );
+
+      while (existing.exists()) {
+
+        code = makeRoomCode();
+
+        existing =
+          await get(
+            ref(db, "quickQuiz/" + code)
+          );
+
+      }
+
+
+      currentRoom = code;
+      isHost = true;
+
+
+      await set(roomRef(), {
+
+        hostId: currentPlayerId,
+
+        started: false,
+
+        question: 0,
+
+        deadline: 0,
+
+        players: {
+
+          [currentPlayerId]: {
+
+            name: currentPlayerName,
+
+            score: 0,
+
+            answered: false
+
+          }
+
+        }
+
+      });
+
+
+      openRoom();
+
+      listenToRoom();
+
+    };
+
+
+  /* =========================
+     JOIN ROOM
+  ========================= */
+
+  document
+    .getElementById("joinBtn")
+    .onclick = async () => {
+
+      const name =
+        document
+          .getElementById("joinName")
+          .value
+          .trim();
+
+      const code =
+        document
+          .getElementById("roomInput")
+          .value
+          .trim();
+
+
+      if (!name || !code) {
+
+        alert("اكتب الاسم وكود الغرفة 😭");
+        return;
+
+      }
+
+
+      const targetRef =
+        ref(
+          db,
+          "quickQuiz/" + code
+        );
+
+
+      const snapshot =
+        await get(targetRef);
+
+
+      if (!snapshot.exists()) {
+
+        alert("الغرفة غير موجودة ❌");
+        return;
+
+      }
+
+
+      const room =
+        snapshot.val();
+
+
+      if (room.started) {
+
+        alert("اللعبة بدأت بالفعل ❌");
+        return;
+
+      }
+
+
+      const players =
+        room.players
+          ? Object.values(room.players)
+          : [];
+
+
+      if (players.length >= 4) {
+
+        alert("الغرفة ممتلئة 😭");
+        return;
+
+      }
+
+
+      const duplicate =
+        players.some(
+          player =>
+            player.name.toLowerCase() ===
+            name.toLowerCase()
+        );
+
+
+      if (duplicate) {
+
+        alert("هذا الاسم مستخدم بالغرفة!");
+        return;
+
+      }
+
+
+      currentPlayerId = makeId();
+      currentPlayerName = name;
+
+      currentRoom = code;
+      isHost = false;
+
+
+      await update(targetRef, {
+
+        ["players/" + currentPlayerId]: {
+
+          name: currentPlayerName,
+
+          score: 0,
+
+          answered: false
+
+        }
+
+      });
+
+
+      openRoom();
+
+      listenToRoom();
+
+    };
+
+
+  /* =========================
+     ROOM SCREEN
+  ========================= */
+
+  function openRoom() {
+
+    showOnly("roomBox");
+
+    document
+      .getElementById("roomCode")
+      .textContent = currentRoom;
+
+  }
+
+
+  /* =========================
+     LISTEN TO ROOM
+  ========================= */
+
+  function listenToRoom() {
+
+    const r = roomRef();
+
+
+    roomListener =
+      onValue(r, snapshot => {
+
+        const room =
+          snapshot.val();
+
+
+        if (!room) return;
+
+
+        updatePlayersList(room);
+
+
+        if (!room.started) {
+
+          updateRoomStatus(room);
+
+          return;
+
+        }
+
+
+        /*
+          اللعبة بدأت
+        */
+
+        showOnly("gameBox");
+
+        handleGameState(room);
+
+      });
+
+  }
+
+
+  /* =========================
+     PLAYER LIST
+  ========================= */
+
+  function updatePlayersList(room) {
+
+    const list =
+      document
+        .getElementById("playersList");
+
+
+    list.innerHTML = "";
+
+
+    const players =
+      room.players
+        ? Object.entries(room.players)
+        : [];
+
+
+    players.forEach(
+      ([id, player]) => {
+
+        const div =
+          document.createElement("div");
+
+
+        div.className = "player";
+
+
+        if (id === room.hostId) {
+
+          div.innerHTML =
+            "👑 " +
+            player.name +
+            " <span class='host'>(المضيف)</span>";
+
+        } else {
+
+          div.textContent =
+            "👤 " + player.name;
+
+        }
+
+
+        list.appendChild(div);
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     ROOM STATUS
+  ========================= */
+
+  function updateRoomStatus(room) {
+
+    const count =
       room.players
         ? Object.keys(room.players).length
         : 0;
 
-    if (playerCount >= 4) {
 
-      showMessage(
-        "الغرفة ممتلئة 😭"
+    const status =
+      document
+        .getElementById("roomStatus");
+
+
+    const startButton =
+      document
+        .getElementById("startButton");
+
+
+    if (count < 3) {
+
+      status.textContent =
+        "نحتاج " +
+        (3 - count) +
+        " لاعب حتى تبدأ اللعبة 👥";
+
+
+      startButton.classList.add(
+        "hidden"
       );
 
       return;
 
     }
 
-    if (room.status !== "waiting") {
 
-      showMessage(
-        "اللعبة بدأت بالفعل 🎲"
+    status.textContent =
+      count +
+      " لاعبين جاهزين! 🔥";
+
+
+    if (isHost) {
+
+      startButton.classList.remove(
+        "hidden"
       );
-
-      return;
 
     }
 
-    roomId = code;
+  }
 
-    myPlayerId =
-      generatePlayerId();
 
-    const player = {
+  /* =========================
+     START GAME
+  ========================= */
 
-      id: myPlayerId,
-      name: name,
-      points: 100
+  document
+    .getElementById("startButton")
+    .onclick = async () => {
+
+      if (!isHost) return;
+
+
+      const snapshot =
+        await get(roomRef());
+
+
+      const room =
+        snapshot.val();
+
+
+      const count =
+        room.players
+          ? Object.keys(room.players).length
+          : 0;
+
+
+      if (count < 3) {
+
+        alert("لازم 3 لاعبين على الأقل 👥");
+        return;
+
+      }
+
+
+      const now =
+        Date.now();
+
+
+      const updates = {
+
+        started: true,
+
+        question: 0,
+
+        deadline:
+          now + 10000
+
+      };
+
+
+      Object.keys(room.players).forEach(
+        id => {
+
+          updates[
+            "players/" +
+            id +
+            "/answered"
+          ] = false;
+
+        }
+      );
+
+
+      await update(
+        roomRef(),
+        updates
+      );
 
     };
 
-    await firebaseUpdate(
-      roomRef,
-      {
 
-        ["players/" + myPlayerId]:
-          player
+  /* =========================
+     GAME STATE
+  ========================= */
 
-      }
+  function handleGameState(room) {
 
-    );
-
-    openLobby();
-
-    listenToRoom();
-
-  } catch (error) {
-
-    console.error(error);
-
-    showMessage(
-      "صار خطأ أثناء الدخول 😢"
-    );
-
-  }
-
-}
+    const questionIndex =
+      Number(room.question || 0);
 
 
-/* الاستماع لتغييرات الغرفة */
+    if (
+      questionIndex >=
+      questions.length
+    ) {
 
-function listenToRoom() {
+      finishGame(room);
 
-  const roomRef =
-    firebaseRef(
-      firebaseDB,
-      "rooms/" + roomId
-    );
+      return;
 
-  firebaseOnValue(
-    roomRef,
-    snapshot => {
+    }
 
-      if (!snapshot.exists()) {
-        return;
-      }
 
-      gameData =
-        snapshot.val();
+    /*
+      إذا السؤال تغير، نعيد بناء الشاشة.
+    */
 
-      updateLobby();
+    if (localQuestion !== questionIndex) {
+
+      localQuestion =
+        questionIndex;
+
+      localAnswered =
+        false;
+
+      showQuestion(
+        room,
+        questionIndex
+      );
+
+    }
+
+
+    /*
+      إذا اللاعب جاوب بالفعل
+      على هذا السؤال.
+    */
+
+    const me =
+      room.players?.[currentPlayerId];
+
+
+    if (me?.answered) {
+
+      localAnswered = true;
+
+      document
+        .getElementById("waitingMessage")
+        .classList.remove("hidden");
+
+    }
+
+
+    /*
+      المضيف يتأكد إذا كل اللاعبين جاوبوا.
+    */
+
+    if (isHost) {
+
+      const players =
+        Object.values(
+          room.players || {}
+        );
+
+
+      const allAnswered =
+        players.length >= 3 &&
+        players.every(
+          player => player.answered === true
+        );
+
+
+      const deadline =
+        Number(room.deadline || 0);
+
 
       if (
-        gameData.status === "playing"
+        allAnswered ||
+        Date.now() >= deadline
       ) {
 
-        openGame();
-
-        renderGame();
+        advanceQuestion(room);
 
       }
 
     }
-  );
-
-}
 
 
-/* عرض غرفة الانتظار */
+    startTimer(
+      Number(room.deadline || 0)
+    );
 
-function openLobby() {
-
-  document
-    .getElementById("home")
-    .classList.add("hidden");
-
-  document
-    .getElementById("lobby")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("showRoomCode")
-    .textContent = roomId;
-
-}
-
-
-/* تحديث اللاعبين */
-
-function updateLobby() {
-
-  if (!gameData || !gameData.players) {
-    return;
   }
 
-  const players =
-    Object.values(
-      gameData.players
-    );
 
-  const container =
-    document.getElementById(
-      "lobbyPlayers"
-    );
+  /* =========================
+     SHOW QUESTION
+  ========================= */
 
-  container.innerHTML = "";
-
-  players.forEach(
-    (player, index) => {
-
-      const div =
-        document.createElement("div");
-
-      div.className = "player";
-
-      div.innerHTML =
-        `<strong>👤 ${player.name}</strong>`;
-
-      container.appendChild(div);
-
-    }
-  );
-
-  document
-    .getElementById("lobbyStatus")
-    .textContent =
-      players.length +
-      " / 4 لاعبين دخلوا";
-
-  /*
-    أول لاعب هو صاحب الغرفة
-  */
-
-  const firstPlayer =
-    players[0];
-
-  if (
-    firstPlayer &&
-    firstPlayer.id === myPlayerId &&
-    players.length >= 2
+  function showQuestion(
+    room,
+    index
   ) {
 
-    document
-      .getElementById("startButton")
-      .classList.remove("hidden");
+    const question =
+      questions[index];
 
-  } else {
 
     document
-      .getElementById("startButton")
+      .getElementById("questionNumber")
+      .textContent =
+        "السؤال " +
+        (index + 1) +
+        " من " +
+        questions.length;
+
+
+    document
+      .getElementById("questionText")
+      .textContent =
+        question.q;
+
+
+    const answers =
+      document
+        .getElementById("answers");
+
+
+    answers.innerHTML = "";
+
+
+    document
+      .getElementById("waitingMessage")
       .classList.add("hidden");
 
-  }
 
-}
+    question.a.forEach(
+      (answer, indexAnswer) => {
+
+        const button =
+          document.createElement("button");
 
 
-/* بدء اللعبة */
+        button.className =
+          "answer";
 
-async function startGame() {
 
-  if (!gameData) return;
+        button.textContent =
+          answer;
 
-  const players =
-    Object.values(
-      gameData.players
+
+        button.onclick = () => {
+
+          submitAnswer(
+            indexAnswer,
+            question.correct
+          );
+
+        };
+
+
+        answers.appendChild(
+          button
+        );
+
+      }
     );
-
-  if (players.length < 2) {
-
-    alert(
-      "لازم يدخل لاعبين على الأقل."
-    );
-
-    return;
-
-  }
-
-  await firebaseUpdate(
-
-    firebaseRef(
-      firebaseDB,
-      "rooms/" + roomId
-    ),
-
-    {
-
-      status: "playing",
-
-      round: 1,
-
-      currentPlayer: 0
-
-    }
-
-  );
-
-}
-
-
-/* فتح شاشة اللعبة */
-
-function openGame() {
-
-  document
-    .getElementById("lobby")
-    .classList.add("hidden");
-
-  document
-    .getElementById("game")
-    .classList.remove("hidden");
-
-}
-
-
-/* عرض اللعبة */
-
-function renderGame() {
-
-  if (!gameData) return;
-
-  const players =
-    Object.values(
-      gameData.players || {}
-    );
-
-  document
-    .getElementById("roundText")
-    .textContent =
-      "الجولة " +
-      gameData.round +
-      " / " +
-      TOTAL_ROUNDS;
-
-  const current =
-    players[
-      gameData.currentPlayer
-    ];
-
-  document
-    .getElementById("turnText")
-    .textContent =
-      current
-        ? "الدور الآن: " + current.name
-        : "";
-
-  const container =
-    document.getElementById(
-      "gamePlayers"
-    );
-
-  container.innerHTML = "";
-
-  players.forEach(
-    player => {
-
-      const div =
-        document.createElement("div");
-
-      div.className =
-        "player";
-
-      div.innerHTML = `
-        <strong>👤 ${player.name}</strong>
-        <div class="points">
-          ${player.points}
-        </div>
-        <small>نقطة</small>
-      `;
-
-      container.appendChild(div);
-
-    }
-  );
-
-  renderActions();
-
-}
-
-
-/* بطاقات الحظ */
-
-function renderActions() {
-
-  const actions =
-    document.getElementById(
-      "gameActions"
-    );
-
-  actions.innerHTML = "";
-
-  const players =
-    Object.values(
-      gameData.players || {}
-    );
-
-  const current =
-    players[
-      gameData.currentPlayer
-    ];
-
-  if (!current) return;
-
-  if (current.id !== myPlayerId) {
-
-    actions.innerHTML =
-      "<p class='status'>انتظري دورج... ⏳</p>";
-
-    return;
 
   }
 
-  actions.innerHTML = `
-    <h2>اختاري بطاقة 🎴</h2>
 
-    <button onclick="chooseCard(20)">
-      🎁 +20
-    </button>
+  /* =========================
+     SUBMIT ANSWER
+  ========================= */
 
-    <button onclick="chooseCard(50)">
-      💰 +50
-    </button>
-
-    <button onclick="chooseCard(100)">
-      💎 +100
-    </button>
-
-    <button onclick="chooseCard(-20)">
-      💥 -20
-    </button>
-
-    <button onclick="chooseCard(-50)">
-      😈 -50
-    </button>
-
-    <button onclick="chooseCard(0)">
-      🫥 لا شيء
-    </button>
-  `;
-
-}
-
-
-/* اختيار البطاقة */
-
-async function chooseCard(value) {
-
-  const players =
-    Object.values(
-      gameData.players || {}
-    );
-
-  const currentIndex =
-    gameData.currentPlayer;
-
-  const current =
-    players[currentIndex];
-
-  if (
-    !current ||
-    current.id !== myPlayerId
+  async function submitAnswer(
+    selected,
+    correct
   ) {
-    return;
-  }
 
-  let newPoints =
-    current.points + value;
+    if (localAnswered) return;
 
-  if (newPoints < 0) {
-    newPoints = 0;
-  }
 
-  const updates = {};
+    localAnswered = true;
 
-  updates[
-    "rooms/" +
-    roomId +
-    "/players/" +
-    current.id +
-    "/points"
-  ] = newPoints;
 
-  let nextPlayer =
-    currentIndex + 1;
+    const buttons =
+      document
+        .querySelectorAll(
+          "#answers button"
+        );
 
-  let nextRound =
-    gameData.round;
 
-  if (nextPlayer >= players.length) {
+    buttons.forEach(
+      button => {
 
-    nextPlayer = 0;
+        button.disabled = true;
 
-    nextRound++;
+      }
+    );
 
-  }
 
-  if (nextRound > TOTAL_ROUNDS) {
+    /*
+      نجيب الحالة الحالية
+      حتى نتأكد أن السؤال بعده نفسه.
+    */
 
-    await firebaseUpdate(
+    const snapshot =
+      await get(roomRef());
 
-      firebaseRef(
-        firebaseDB,
-        "rooms/" + roomId
+
+    const room =
+      snapshot.val();
+
+
+    if (!room) return;
+
+
+    if (
+      Number(room.question || 0) !==
+      localQuestion
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      Date.now() >
+      Number(room.deadline || 0)
+    ) {
+
+      return;
+
+    }
+
+
+    const player =
+      room.players?.[currentPlayerId];
+
+
+    if (!player) return;
+
+
+    if (player.answered) return;
+
+
+    const isCorrect =
+      selected === correct;
+
+
+    let newScore =
+      Number(player.score || 0);
+
+
+    if (isCorrect) {
+
+      newScore += 10;
+
+      buttons[selected]
+        ?.classList.add("correct");
+
+    } else {
+
+      buttons[selected]
+        ?.classList.add("wrong");
+
+      buttons[correct]
+        ?.classList.add("correct");
+
+    }
+
+
+    await update(
+      ref(
+        db,
+        "quickQuiz/" +
+        currentRoom +
+        "/players/" +
+        currentPlayerId
       ),
-
       {
 
-        status: "finished"
+        score: newScore,
+
+        answered: true
+
+      }
+    );
+
+
+    document
+      .getElementById("waitingMessage")
+      .classList.remove("hidden");
+
+  }
+
+
+  /* =========================
+     TIMER
+  ========================= */
+
+  function startTimer(deadline) {
+
+    clearInterval(timerInterval);
+
+
+    function updateTimer() {
+
+      const remaining =
+        Math.max(
+          0,
+          Math.ceil(
+            (deadline - Date.now()) / 1000
+          )
+        );
+
+
+      document
+        .getElementById("timer")
+        .textContent =
+          remaining;
+
+
+      if (remaining <= 0) {
+
+        clearInterval(timerInterval);
 
       }
 
-    );
+    }
 
-    return;
+
+    updateTimer();
+
+
+    timerInterval =
+      setInterval(
+        updateTimer,
+        250
+      );
 
   }
 
-  updates[
-    "rooms/" +
-    roomId +
-    "/currentPlayer"
-  ] = nextPlayer;
 
-  updates[
-    "rooms/" +
-    roomId +
-    "/round"
-  ] = nextRound;
+  /* =========================
+     ADVANCE QUESTION
+  ========================= */
 
-  await firebaseUpdate(
+  async function advanceQuestion(room) {
 
-    firebaseRef(
-      firebaseDB,
-      ""
-    ),
+    /*
+      نقرأ أحدث نسخة حتى ما يصير
+      انتقال مرتين بنفس الوقت.
+    */
 
-    updates
-
-  );
-
-}
+    const snapshot =
+      await get(roomRef());
 
 
-/* رسالة */
+    const latest =
+      snapshot.val();
 
-function showMessage(text) {
 
-  document
-    .getElementById("message")
-    .textContent = text;
+    if (!latest) return;
 
-}
+
+    const currentIndex =
+      Number(latest.question || 0);
+
+
+    if (
+      currentIndex !==
+      localQuestion
+    ) {
+
+      return;
+
+    }
+
+
+    const next =
+      currentIndex + 1;
+
+
+    if (
+      next >=
+      questions.length
+    ) {
+
+      await update(
+        roomRef(),
+        {
+
+          question:
+            questions.length,
+
+          deadline: 0
+
+        }
+      );
+
+      return;
+
+    }
+
+
+    const updates = {
+
+      question: next,
+
+      deadline:
+        Date.now() + 10000
+
+    };
+
+
+    Object.keys(
+      latest.players || {}
+    ).forEach(
+      id => {
+
+        updates[
+          "players/" +
+          id +
+          "/answered"
+        ] = false;
+
+      }
+    );
+
+
+    await update(
+      roomRef(),
+      updates
+    );
+
+  }
+
+
+  /* =========================
+     FINISH GAME
+  ========================= */
+
+  function finishGame(room) {
+
+    clearInterval(
+      timerInterval
+    );
+
+
+    showOnly("resultBox");
+
+
+    const results =
+      document
+        .getElementById("results");
+
+
+    results.innerHTML = "";
+
+
+    const players =
+      Object.values(
+        room.players || {}
+      );
+
+
+    players.sort(
+      (a, b) =>
+        Number(b.score || 0) -
+        Number(a.score || 0)
+    );
+
+
+    players.forEach(
+      (player, index) => {
+
+        const div =
+          document.createElement("div");
+
+
+        div.className =
+          "score";
+
+
+        if (
+          player.name ===
+          currentPlayerName
+        ) {
+
+          div.classList.add(
+            "my-score"
+          );
+
+        }
+
+
+        let medal = "";
+
+
+        if (index === 0) {
+          medal = "🥇";
+        } else if (index === 1) {
+          medal = "🥈";
+        } else if (index === 2) {
+          medal = "🥉";
+        } else {
+          medal = "🏅";
+        }
+
+
+        div.textContent =
+          medal +
+          " " +
+          player.name +
+          " — " +
+          (player.score || 0) +
+          " نقطة";
+
+
+        results.appendChild(
+          div
+        );
+
+      }
+    );
+
+  }
 
 </script>
 
